@@ -7,7 +7,7 @@ export function HowBookingWorks() {
         <SectionHeading
           eyebrow="Simple Process"
           title="How Booking Works"
-          subtitle="From first search to final take — four steps and you are rolling."
+          subtitle="From first search to final cut — four steps and the room is yours."
         />
         <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {[

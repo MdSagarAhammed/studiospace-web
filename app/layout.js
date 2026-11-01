@@ -19,11 +19,11 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: {
-    default: "StudioSpace — Book Creative Studios, By The Hour",
+    default: "StudioSpace — Creativity Needs A Room",
     template: "%s · StudioSpace",
   },
   description:
-    "The peer-to-peer marketplace for creators. Discover and book photography studios, sound stages, podcast rooms, music suites and art workshops.",
+    "The peer-to-peer studio marketplace. Book photo studios, sound stages, podcast lounges, music suites and art workshops by the hour — straight from the hosts who run them.",
 };
 
 export default function RootLayout({ children }) {

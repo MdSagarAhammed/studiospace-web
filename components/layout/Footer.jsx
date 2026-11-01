@@ -69,10 +69,10 @@ export function Footer() {
           <div className="space-y-3">
             <Logo />
             <p className="max-w-xs text-sm text-muted-foreground">
-              Our mission is to give every creator — filmmaker, photographer,
-              podcaster or musician — a place where their work can happen.
-              Book inspiring spaces by the hour, with transparent pricing and
-              zero hassle.
+              Every great piece of work starts in a room with the right light
+              and the right sound. StudioSpace connects creators — shooters,
+              hosts, engineers and makers — to inspiring spaces by the hour,
+              with transparent pricing and zero hassle.
             </p>
             <div className="flex gap-2">
               {SOCIALS.map(({ icon: Icon, label, href }) => (

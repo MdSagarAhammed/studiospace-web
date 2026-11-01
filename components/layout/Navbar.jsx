@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
@@ -36,9 +36,13 @@ const NAV_LINKS = [
   { href: "/#about", label: "About Us" },
 ];
 
-function isActive(pathname, href) {
-  if (href === "/#how-it-works" || href === "/#about") return false;
-  if (href === "/") return pathname === "/";
+function isActive(pathname, activeHash, href) {
+  if (href.startsWith("/#")) {
+    // Same-page hash links only light up while we are on the landing page
+    // viewing that section ("#how-it-works", "#about").
+    return pathname === "/" && activeHash === href.slice(1);
+  }
+  if (href === "/") return pathname === "/" && !activeHash;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -47,6 +51,23 @@ export function Navbar() {
   const router = useRouter();
   const { data: session, isPending } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Track the URL fragment (#how-it-works / #about). Next.js doesn't expose
+  // the hash through any hook, so we read it here: on mount, after soft
+  // navigations, and on hashchange (covers browser back/forward).
+  const [activeHash, setActiveHash] = useState("");
+  useEffect(() => {
+    const syncHash = () => setActiveHash(window.location.hash || "");
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, [pathname]);
+
+  const activateLink = (href) => {
+    // history.pushState doesn't fire hashchange, so hash links highlight
+    // themselves on click; route links clear any stale section highlight.
+    setActiveHash(href.startsWith("/#") ? href.slice(1) : "");
+  };
 
   const handleLogout = async () => {
     await signOut();
@@ -61,7 +82,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="container-w flex h-16 items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" aria-label="StudioSpace home">
+        <Link href="/" aria-label="StudioSpace home" onClick={() => activateLink("/")}>
           <Logo />
         </Link>
 
@@ -71,13 +92,14 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={() => activateLink(link.href)}
               className={cn(
                 "relative rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
-                isActive(pathname, link.href) && "text-primary"
+                isActive(pathname, activeHash, link.href) && "text-primary"
               )}
             >
               {link.label}
-              {isActive(pathname, link.href) ? (
+              {isActive(pathname, activeHash, link.href) ? (
                 <span className="absolute inset-x-3 -bottom-[13px] h-0.5 rounded-full bg-primary" />
               ) : null}
             </Link>
@@ -174,10 +196,13 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => {
+                  activateLink(link.href);
+                  setMobileOpen(false);
+                }}
                 className={cn(
                   "rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
-                  isActive(pathname, link.href) && "text-primary"
+                  isActive(pathname, activeHash, link.href) && "text-primary"
                 )}
               >
                 {link.label}

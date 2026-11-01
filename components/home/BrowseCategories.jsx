@@ -13,7 +13,7 @@ export function BrowseCategories() {
         <SectionHeading
           eyebrow="Browse Categories"
           title="Find The Right Room For The Job"
-          subtitle="Every creative discipline has its own space. Pick yours and see what's available."
+          subtitle="Every craft has its own kind of room. Pick your discipline and see what hosts have ready near you."
         />
         <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {CATEGORY_CARDS.map((cat) => (
