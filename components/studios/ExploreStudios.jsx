@@ -153,7 +153,7 @@ export function ExploreStudios() {
         ) : (
           <EmptyState
             icon={PackageSearchIcon}
-            title={hasFilters ? "No studios match your filters" : "No studios listed yet"}
+            title={hasFilters ? "No studios match your search" : "No studios listed yet"}
             description={
               hasFilters
                 ? "Try a different keyword or category — new spaces are added every week."

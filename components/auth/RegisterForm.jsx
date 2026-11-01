@@ -31,7 +31,7 @@ function Rule({ ok, children }) {
     <li
       className={cn(
         "flex items-center gap-1.5 text-xs",
-        ok ? "text-emerald-600" : "text-muted-foreground"
+        ok ? "text-primary" : "text-muted-foreground"
       )}
     >
       {ok ? <CircleCheckIcon className="size-3.5" /> : <CircleXIcon className="size-3.5" />}

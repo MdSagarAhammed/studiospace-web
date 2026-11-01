@@ -48,73 +48,76 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* StudioSpace brand palette — deep maroon #59171b × peach #fed7b8 */
 :root {
-  --background: oklch(0.995 0.003 90);
-  --foreground: oklch(0.185 0.015 80);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.185 0.015 80);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.185 0.015 80);
-  --primary: oklch(0.69 0.165 55);
-  --primary-foreground: oklch(0.99 0.005 85);
-  --secondary: oklch(0.965 0.01 85);
-  --secondary-foreground: oklch(0.28 0.03 55);
-  --muted: oklch(0.965 0.008 85);
-  --muted-foreground: oklch(0.51 0.02 75);
-  --accent: oklch(0.955 0.025 80);
-  --accent-foreground: oklch(0.32 0.06 55);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.915 0.012 80);
-  --input: oklch(0.915 0.012 80);
-  --ring: oklch(0.69 0.165 55);
-  --chart-1: oklch(0.69 0.165 55);
-  --chart-2: oklch(0.556 0.13 245);
-  --chart-3: oklch(0.6 0.14 150);
-  --chart-4: oklch(0.67 0.16 300);
-  --chart-5: oklch(0.6 0.18 15);
+  --background: #fed7b8;
+  --foreground: #59171b;
+  --card: #fff3e7;
+  --card-foreground: #59171b;
+  --popover: #fff3e7;
+  --popover-foreground: #59171b;
+  --primary: #59171b;
+  --primary-foreground: #fed7b8;
+  --secondary: #eec9ab;
+  --secondary-foreground: #59171b;
+  --muted: #f6ddc4;
+  --muted-foreground: #7c4a3c;
+  --accent: #f4d4b8;
+  --accent-foreground: #59171b;
+  --destructive: #b3261e;
+  --border: #e8bd98;
+  --input: #e5b891;
+  --ring: #59171b;
+  --chart-1: #59171b;
+  --chart-2: #8a3a34;
+  --chart-3: #b96a5c;
+  --chart-4: #d99a7c;
+  --chart-5: #fed7b8;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0.005 85);
-  --sidebar-foreground: oklch(0.185 0.015 80);
-  --sidebar-primary: oklch(0.69 0.165 55);
-  --sidebar-primary-foreground: oklch(0.99 0.005 85);
-  --sidebar-accent: oklch(0.955 0.025 80);
-  --sidebar-accent-foreground: oklch(0.32 0.06 55);
-  --sidebar-border: oklch(0.915 0.012 80);
-  --sidebar-ring: oklch(0.69 0.165 55);
+  --sidebar: #ffd9bc;
+  --sidebar-foreground: #59171b;
+  --sidebar-primary: #59171b;
+  --sidebar-primary-foreground: #fed7b8;
+  --sidebar-accent: #f4d4b8;
+  --sidebar-accent-foreground: #59171b;
+  --sidebar-border: #e8bd98;
+  --sidebar-ring: #59171b;
+  --page-gradient-end: #edb08a;
 }
 
 .dark {
-  --background: oklch(0.16 0.01 60);
-  --foreground: oklch(0.975 0.005 85);
-  --card: oklch(0.21 0.012 60);
-  --card-foreground: oklch(0.975 0.005 85);
-  --popover: oklch(0.21 0.012 60);
-  --popover-foreground: oklch(0.975 0.005 85);
-  --primary: oklch(0.75 0.15 65);
-  --primary-foreground: oklch(0.2 0.03 55);
-  --secondary: oklch(0.27 0.015 60);
-  --secondary-foreground: oklch(0.975 0.005 85);
-  --muted: oklch(0.27 0.015 60);
-  --muted-foreground: oklch(0.68 0.015 75);
-  --accent: oklch(0.3 0.03 55);
-  --accent-foreground: oklch(0.93 0.04 75);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.75 0.15 65);
-  --chart-1: oklch(0.75 0.15 65);
-  --chart-2: oklch(0.62 0.15 245);
-  --chart-3: oklch(0.66 0.14 150);
-  --chart-4: oklch(0.7 0.16 300);
-  --chart-5: oklch(0.66 0.18 15);
-  --sidebar: oklch(0.21 0.012 60);
-  --sidebar-foreground: oklch(0.975 0.005 85);
-  --sidebar-primary: oklch(0.75 0.15 65);
-  --sidebar-primary-foreground: oklch(0.2 0.03 55);
-  --sidebar-accent: oklch(0.3 0.03 55);
-  --sidebar-accent-foreground: oklch(0.93 0.04 75);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.75 0.15 65);
+  --background: #200a0c;
+  --foreground: #fed7b8;
+  --card: #2e1214;
+  --card-foreground: #fed7b8;
+  --popover: #2e1214;
+  --popover-foreground: #fed7b8;
+  --primary: #fed7b8;
+  --primary-foreground: #59171b;
+  --secondary: #48201f;
+  --secondary-foreground: #fed7b8;
+  --muted: #452020;
+  --muted-foreground: #d9a88a;
+  --accent: #55292a;
+  --accent-foreground: #fed7b8;
+  --destructive: #e2574f;
+  --border: rgb(254 215 184 / 16%);
+  --input: rgb(254 215 184 / 22%);
+  --ring: #fed7b8;
+  --chart-1: #fed7b8;
+  --chart-2: #e9a98b;
+  --chart-3: #cf7d63;
+  --chart-4: #a95145;
+  --chart-5: #7c332c;
+  --sidebar: #2a1012;
+  --sidebar-foreground: #fed7b8;
+  --sidebar-primary: #fed7b8;
+  --sidebar-primary-foreground: #59171b;
+  --sidebar-accent: #48201f;
+  --sidebar-accent-foreground: #fed7b8;
+  --sidebar-border: rgb(254 215 184 / 16%);
+  --sidebar-ring: #fed7b8;
+  --page-gradient-end: #40181a;
 }
 
 @layer base {
@@ -123,6 +126,14 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Brand gradient — peach (#fed7b8) fading into the palette's dusty-rose midpoint.
+       Light mode keeps both ends light so maroon text stays readable everywhere. */
+    background-image: linear-gradient(
+      170deg,
+      var(--background) 0%,
+      var(--page-gradient-end) 100%
+    );
+    background-attachment: fixed;
   }
   html {
     @apply font-sans;

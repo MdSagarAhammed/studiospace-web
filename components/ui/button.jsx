@@ -45,10 +45,22 @@ function Button({
   size = "default",
   ...props
 }) {
+  // Base UI expects a native <button> unless told otherwise. When the caller
+  // renders the button as a non-<button> element (e.g. <Link>, <a>), native
+  // button semantics can't apply — set nativeButton={false} to match, which
+  // also silences Base UI's console error. A caller-provided nativeButton
+  // (spread after this) still wins, and <Button/> renders stay native.
+  const renderType = props.render?.type;
+  const defaults =
+    renderType && renderType !== "button" && renderType !== Button
+      ? { nativeButton: false }
+      : undefined;
+
   return (
     <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
+      {...defaults}
       {...props}
     />
   )

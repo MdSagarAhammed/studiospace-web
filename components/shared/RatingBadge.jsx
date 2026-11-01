@@ -5,7 +5,7 @@ export function RatingBadge({ rating, count, className }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400",
+        "inline-flex items-center gap-1 text-xs font-semibold text-[#8a3a34] dark:text-[#f2c8a6]",
         className
       )}
     >

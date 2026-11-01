@@ -168,7 +168,7 @@ export function StudioDetails({ id }) {
                     key={a}
                     className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm"
                   >
-                    <CircleCheckIcon className="size-4 text-emerald-600" />
+                    <CircleCheckIcon className="size-4 text-primary" />
                     {a}
                   </li>
                 ))}
@@ -230,7 +230,7 @@ export function StudioDetails({ id }) {
                   Up to {studio.maxCapacity} people
                 </li>
                 <li className="flex items-center gap-2">
-                  <CircleCheckIcon className="size-4 text-emerald-600" />
+                  <CircleCheckIcon className="size-4 text-primary" />
                   Liability protection included
                 </li>
               </ul>
@@ -272,7 +272,7 @@ export function StudioDetails({ id }) {
                 </div>
               </div>
               <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
-                <CircleCheckIcon className="size-3.5 text-emerald-600" />
+                <CircleCheckIcon className="size-3.5 text-primary" />
                 Identity verified host · responds within a few hours
               </p>
             </CardContent>

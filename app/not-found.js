@@ -24,11 +24,10 @@ export default function NotFound() {
 
       <div className="max-w-md space-y-2">
         <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
-          This Stage Doesn&apos;t Exist
+          This page is not found.
         </h1>
         <p className="text-sm text-muted-foreground sm:text-base">
-          The page you&apos;re looking for was struck from the set — or never
-          made it to the call sheet. Let&apos;s get you back to the action.
+          The page you&apos;re looking for doesn&apos;t exist. Let&apos;s get you back to the action.
         </p>
       </div>
 
