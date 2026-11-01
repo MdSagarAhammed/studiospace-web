@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -31,21 +31,23 @@ const TIME_OPTIONS = [
   "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00",
 ];
 
+function dateInputValue(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export function BookingModal({ open, onOpenChange, studio }) {
   const { data: session } = useSession();
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return dateInputValue(tomorrow);
+  });
   const [time, setTime] = useState("10:00");
   const [hours, setHours] = useState("2");
   const [loading, setLoading] = useState(false);
-
-  // Default to tomorrow so the form is never empty
-  useEffect(() => {
-    if (open && !date) {
-      const d = new Date();
-      d.setDate(d.getDate() + 1);
-      setDate(d.toISOString().slice(0, 10));
-    }
-  }, [open, date]);
 
   const rate = Number(studio?.hourlyRate || 0);
   const total = useMemo(() => rate * Number(hours || 0), [rate, hours]);
@@ -95,7 +97,7 @@ export function BookingModal({ open, onOpenChange, studio }) {
                 <Input
                   id="booking-date"
                   type="date"
-                  min={new Date().toISOString().slice(0, 10)}
+                  min={dateInputValue(new Date())}
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   className="pl-9"

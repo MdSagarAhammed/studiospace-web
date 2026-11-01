@@ -1,41 +1,54 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn, signUp, useSession } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-/** Google-only social login — navigates to the redirect target or home. */
+/** Google social login — full-page redirect to Google, then back to the target. */
 export function GoogleButton({ mode = "login" }) {
   const [loading, setLoading] = useState(false);
   const params = useSearchParams();
-  const router = useRouter();
 
   const handleClick = async () => {
     setLoading(true);
-    const callbackURL = params.get("redirect") || "/";
-    try {
-      await signIn.social({ provider: "google", callbackURL });
-      // With redirect-based OAuth the page navigates away automatically.
-      // If it returns (popup flow), send the user home.
-      router.push(callbackURL);
-    } catch {
-      toast.error("Google sign-in failed. Please try again.");
+    const redirectTo = params.get("redirect") || "/";
+    // BetterAuth issues the post-auth redirect verbatim from the API origin.
+    // A relative path would resolve against the API host (e.g. localhost:5010),
+    // which has no such route → "Route not found". Send an absolute URL to the
+    // frontend so the browser lands back in the Next.js app.
+    const callbackURL = redirectTo.startsWith("/")
+      ? `${window.location.origin}${redirectTo}`
+      : redirectTo;
+    const { data, error } = await signIn.social({
+      provider: "google",
+      callbackURL,
+      // Take over navigation ourselves — avoids a race with the router
+      disableRedirect: false,
+    });
+    if (error) {
+      toast.error(
+        error.message === "PROVIDER_NOT_ENABLED" ||
+          error.status === 400
+          ? "Google sign-in is not configured on the server. Try email/password."
+          : error.message || "Google sign-in failed. Please try again."
+      );
       setLoading(false);
+      return;
     }
+    if (data?.url) {
+      // Full-page redirect to Google's OAuth consent screen
+      window.location.href = data.url;
+      return;
+    }
+    // No URL returned (popup mode) — fall back to the target route
+    window.location.href = new URL(redirectTo, window.location.origin).toString();
   };
 
   return (
-    <Button
-      type="button"
-      variant="outline"
-      onClick={handleClick}
-      disabled={loading}
-      className="w-full"
-    >
+    <Button type="button" variant="outline" onClick={handleClick} disabled={loading} className="w-full">
       {loading ? (
         <Loader2Icon className="size-4 animate-spin" />
       ) : (

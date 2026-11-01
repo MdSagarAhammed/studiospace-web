@@ -5,11 +5,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Logo } from "@/components/shared/Logo";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -84,6 +86,7 @@ export function Navbar() {
 
         {/* Auth area */}
         <div className="flex items-center gap-2">
+          <ThemeToggle /* always visible */ />
           {isPending ? (
             <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
           ) : user ? (
@@ -105,32 +108,34 @@ export function Navbar() {
                 <ChevronDownIcon className="size-3.5 text-muted-foreground" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <p className="truncate">{user.name}</p>
-                  <p className="truncate text-xs font-normal text-muted-foreground">
-                    {user.email}
-                  </p>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem render={<Link href="/dashboard" />}>
-                  <LayoutDashboardIcon /> Dashboard
-                </DropdownMenuItem>
-                <DropdownMenuItem render={<Link href="/add-studio" />}>
-                  <PlusCircleIcon /> Add New Studio
-                </DropdownMenuItem>
-                <DropdownMenuItem render={<Link href="/my-listings" />}>
-                  <BuildingIcon /> My Studio Listings
-                </DropdownMenuItem>
-                <DropdownMenuItem render={<Link href="/my-bookings" />}>
-                  <CalendarCheckIcon /> My Bookings
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="text-destructive focus:text-destructive"
-                >
-                  <LogOutIcon /> Logout
-                </DropdownMenuItem>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>
+                    <p className="truncate">{user.name}</p>
+                    <p className="truncate text-xs font-normal text-muted-foreground">
+                      {user.email}
+                    </p>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem render={<Link href="/dashboard" />}>
+                    <LayoutDashboardIcon /> Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/add-studio" />}>
+                    <PlusCircleIcon /> Add New Studio
+                  </DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/my-listings" />}>
+                    <BuildingIcon /> My Studio Listings
+                  </DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/my-bookings" />}>
+                    <CalendarCheckIcon /> My Bookings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <LogOutIcon /> Logout
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
@@ -184,9 +189,18 @@ export function Navbar() {
                   <Button variant="outline" render={<Link href="/dashboard" />}>
                     Dashboard
                   </Button>
+                  <Button variant="outline" render={<Link href="/my-bookings" />}>
+                    My Bookings
+                  </Button>
+                  <Button variant="outline" render={<Link href="/my-listings" />}>
+                    My Listings
+                  </Button>
                   <Button variant="destructive" onClick={handleLogout}>
                     Logout
                   </Button>
+                  <div className="col-span-2 flex justify-center border-t pt-2">
+                    <ThemeToggle />
+                  </div>
                 </>
               ) : (
                 <>
@@ -194,6 +208,9 @@ export function Navbar() {
                     Login
                   </Button>
                   <Button render={<Link href="/register" />}>Register</Button>
+                  <div className="col-span-2 flex justify-center border-t pt-2">
+                    <ThemeToggle />
+                  </div>
                 </>
               )}
             </div>

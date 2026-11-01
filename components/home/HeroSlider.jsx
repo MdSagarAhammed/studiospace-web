@@ -52,14 +52,7 @@ export function HeroSlider() {
                     >
                       Explore Studios
                     </Button>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      render={<Link href="/add-studio" />}
-                      className="h-11 border-white/40 bg-white/10 px-6 text-base text-white hover:bg-white/20 hover:text-white"
-                    >
-                      Host Your Space
-                    </Button>
+                    
                   </div>
                 </div>
               </div>

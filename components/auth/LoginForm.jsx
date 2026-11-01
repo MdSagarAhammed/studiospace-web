@@ -11,6 +11,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Divider, GoogleButton } from "./GoogleButton";
 
+// OAuth callback error codes → user-friendly messages. These arrive as
+// /login?error=… redirects from the backend's BetterAuth onAPIError handler.
+const OAUTH_ERROR_MESSAGES = {
+  state_mismatch: "Your Google sign-in session expired. Please try again.",
+  invalid_code: "Google sign-in could not be verified. Please try again.",
+  state_not_found: "Your Google sign-in session expired. Please try again.",
+  provider_not_found:
+    "Google sign-in is not configured on the server. Try email/password.",
+};
+
 export function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
@@ -18,6 +28,13 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Derived from the URL — no extra state/effect needed.
+  const oauthError = params.get("error");
+  const oauthMessage = oauthError
+    ? OAUTH_ERROR_MESSAGES[oauthError] ||
+      "Google sign-in failed. Please try email/password instead."
+    : null;
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
@@ -104,12 +121,12 @@ export function LoginForm() {
           </div>
         </div>
 
-        {error ? (
+        {error || oauthMessage ? (
           <p
             role="alert"
             className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
           >
-            {error}
+            {error || oauthMessage}
           </p>
         ) : null}
 

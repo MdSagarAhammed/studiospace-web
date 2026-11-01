@@ -20,7 +20,7 @@ Open http://localhost:3000
 
 | Variable | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_API_BASE_URL` | Express backend REST API base (defaults to `http://localhost:5000/api`) |
+| `NEXT_PUBLIC_API_BASE_URL` | Express backend REST API base (defaults to `http://localhost:5010/api`) |
 | `NEXT_PUBLIC_BETTER_AUTH_URL` | BetterAuth mount on the backend (`…/api/auth`) |
 | `NEXT_PUBLIC_IMGBB_API_KEY` | imgbb key used by the studio image uploader |
 

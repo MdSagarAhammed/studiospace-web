@@ -22,49 +22,54 @@ export function ExploreStudios() {
   const router = useRouter();
   const params = useSearchParams();
 
-  const [search, setSearch] = useState(params.get("search") || "");
-  const [category, setCategory] = useState(params.get("category") || "all");
+  const search = params.get("search") || "";
+  const category = params.get("category") || "all";
   const [sort, setSort] = useState("newest");
   const [studios, setStudios] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const categoryParam = params.get("category");
-  const searchParam = params.get("search");
+  const updateFilters = useCallback((updates) => {
+    const next = new URLSearchParams(params.toString());
+    for (const [key, value] of Object.entries(updates)) {
+      if (!value || value === "all") next.delete(key);
+      else next.set(key, value);
+    }
+    const query = next.toString();
+    router.replace(query ? `/studios?${query}` : "/studios", {
+      scroll: false,
+    });
+  }, [params, router]);
 
-  useEffect(() => {
-    if (categoryParam) setCategory(categoryParam);
-    if (searchParam) setSearch(searchParam);
-  }, [categoryParam, searchParam]);
-
-  const load = useCallback(async () => {
+  const load = useCallback(async (signal) => {
     setLoading(true);
+    setError(null);
     try {
       const qs = new URLSearchParams();
       if (search.trim()) qs.set("search", search.trim());
       if (category !== "all") qs.set("category", category);
       qs.set("sort", sort);
-      const data = await api.get(`/studios?${qs.toString()}`, { silent: true });
-      setStudios(data?.data || data || []);
+      const data = await api.get(`/studios?${qs.toString()}`, { signal });
+      if (!signal.aborted) setStudios(data?.data ?? data ?? []);
+    } catch (err) {
+      if (signal.aborted || err.name === "AbortError") return;
+      setStudios(null);
+      setError(err.message || "Couldn't load studios. Please try again.");
     } finally {
-      setLoading(false);
+      if (!signal.aborted) setLoading(false);
     }
   }, [search, category, sort]);
 
   useEffect(() => {
-    // debounce search keystrokes
+    const controller = new AbortController();
     const t = setTimeout(() => {
-      load();
-      // keep URL shareable (category pre-selected from category cards)
-      const qs = new URLSearchParams();
-      if (search.trim()) qs.set("search", search.trim());
-      if (category !== "all") qs.set("category", category);
-      router.replace(qs.toString() ? `/studios?${qs}` : "/studios", {
-        scroll: false,
-      });
+      load(controller.signal);
     }, 350);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, category, sort]);
+    return () => {
+      clearTimeout(t);
+      controller.abort();
+    };
+  }, [load]);
 
   const hasFilters = search.trim() || category !== "all";
 
@@ -84,13 +89,16 @@ export function ExploreStudios() {
               <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => updateFilters({ search: e.target.value })}
                 placeholder="Search by title or location…"
                 className="pl-9"
                 aria-label="Search studios"
               />
             </div>
-            <Select value={category} onValueChange={setCategory}>
+            <Select
+              value={category}
+              onValueChange={(value) => updateFilters({ category: value })}
+            >
               <SelectTrigger className="w-full sm:w-52" aria-label="Category">
                 <span className="flex items-center gap-2">
                   <SlidersHorizontalIcon className="size-4 text-muted-foreground" />
@@ -125,6 +133,12 @@ export function ExploreStudios() {
       <div className="container-w py-10">
         {loading ? (
           <StudioGridSkeleton count={9} />
+        ) : error ? (
+          <EmptyState
+            icon={PackageSearchIcon}
+            title="Couldn't load studios"
+            description={error}
+          />
         ) : studios && studios.length > 0 ? (
           <>
             <p className="mb-6 text-sm text-muted-foreground">
@@ -150,8 +164,7 @@ export function ExploreStudios() {
             onAction={
               hasFilters
                 ? () => {
-                    setSearch("");
-                    setCategory("all");
+                    updateFilters({ search: "", category: "all" });
                   }
                 : undefined
             }
