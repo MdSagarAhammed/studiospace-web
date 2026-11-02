@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Loader2Icon, EyeIcon, EyeOffIcon, CircleCheckIcon, CircleXIcon } from "lucide-react";
@@ -42,6 +42,7 @@ function Rule({ ok, children }) {
 
 export function RegisterForm() {
   const router = useRouter();
+  const params = useSearchParams();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -52,6 +53,13 @@ export function RegisterForm() {
   const [touchedPw, setTouchedPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const oauthError = params.get("error");
+  const oauthMessage = oauthError
+    ? oauthError === "provider_not_found"
+      ? "Google sign-in is not configured on the server."
+      : `Google registration failed (code: ${oauthError}). Please try again.`
+    : null;
 
   const { checks, messages } = validatePassword(form.password);
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
@@ -170,12 +178,12 @@ export function RegisterForm() {
           ) : null}
         </div>
 
-        {error ? (
+        {error || oauthMessage ? (
           <p
             role="alert"
             className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
           >
-            {error}
+            {error || oauthMessage}
           </p>
         ) : null}
 

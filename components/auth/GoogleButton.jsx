@@ -14,40 +14,49 @@ export function GoogleButton({ mode = "login" }) {
 
   const handleClick = async () => {
     setLoading(true);
-    const redirectTo = params.get("redirect") || "/";
-    // BetterAuth issues the post-auth redirect verbatim from the API origin.
-    // A relative path would resolve against the API host (e.g. localhost:5010),
-    // which has no such route → "Route not found". Send an absolute URL to the
-    // frontend so the browser lands back in the Next.js app.
-    const callbackURL = redirectTo.startsWith("/")
-      ? `${window.location.origin}${redirectTo}`
-      : redirectTo;
-    const { data, error } = await signIn.social({
-      provider: "google",
-      callbackURL,
-      // Better Auth only creates a new Google account when registration was
-      // explicitly started from the register page.
-      requestSignUp: mode === "register",
-      // Take over navigation ourselves — avoids a race with the router
-      disableRedirect: false,
-    });
-    if (error) {
-      toast.error(
-        error.message === "PROVIDER_NOT_ENABLED" ||
-          error.status === 400
-          ? "Google sign-in is not configured on the server. Try email/password."
-          : error.message || "Google sign-in failed. Please try again."
-      );
+    try {
+      const requestedRedirect = params.get("redirect") || "/";
+      const redirectTo =
+        requestedRedirect.startsWith("/") && !requestedRedirect.startsWith("//")
+          ? requestedRedirect
+          : "/";
+      const callbackURL = new URL(redirectTo, window.location.origin).toString();
+
+      const { data, error } = await signIn.social({
+        provider: "google",
+        callbackURL,
+        errorCallbackURL: new URL(
+          mode === "register" ? "/register" : "/login",
+          window.location.origin
+        ).toString(),
+        // New Google accounts can only be created from the register page.
+        requestSignUp: mode === "register",
+        // Fetch the provider URL as JSON, then perform one browser navigation.
+        disableRedirect: true,
+      });
+
+      if (error) {
+        const code = error.code || error.message;
+        const message =
+          code === "PROVIDER_NOT_ENABLED" || code === "provider_not_found"
+            ? "Google sign-in is not configured on the server."
+            : code === "signup_disabled"
+              ? "No account exists for this Google login. Use the registration page first."
+              : `Google sign-in could not start${code ? ` (${code})` : ""}. Please try again.`;
+        toast.error(message);
+        return;
+      }
+
+      if (!data?.url) {
+        throw new Error("The authentication server did not return a Google sign-in URL.");
+      }
+
+      window.location.assign(data.url);
+    } catch (error) {
+      toast.error(error.message || "Google sign-in could not start. Please try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-    if (data?.url) {
-      // Full-page redirect to Google's OAuth consent screen
-      window.location.href = data.url;
-      return;
-    }
-    // No URL returned (popup mode) — fall back to the target route
-    window.location.href = new URL(redirectTo, window.location.origin).toString();
   };
 
   return (
