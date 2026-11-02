@@ -37,7 +37,7 @@ export function LoginForm() {
   const oauthError = params.get("error");
   const oauthMessage = oauthError
     ? OAUTH_ERROR_MESSAGES[oauthError] ||
-      "Google sign-in failed. Please try email/password instead."
+      `Google sign-in failed (code: ${oauthError}). If this Google account is new, create it from the registration page first.`
     : null;
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
