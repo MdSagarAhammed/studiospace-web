@@ -64,12 +64,17 @@ export function LoginForm() {
       }
 
       authClient.hydrateSession(session);
+      // Next.js may restore this client component from its route cache after
+      // logout. Clear credentials and the pending state before navigating so
+      // returning to /login cannot resurrect the previous form state.
+      setForm({ email: "", password: "" });
       toast.success("Welcome back!");
       router.replace(redirect);
     } catch (err) {
       const msg = err.message || "Login failed. Please try again.";
       setError(msg);
       toast.error(msg);
+    } finally {
       setLoading(false);
     }
   };
