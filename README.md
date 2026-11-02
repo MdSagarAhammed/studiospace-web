@@ -57,6 +57,6 @@ This frontend expects the Express API (separate repository) to serve:
 - `GET /studios?search&category&sort` · `GET /studios/featured` · `GET /studios/:id` · `GET /studios/mine`
 - `POST /studios` · `PUT /studios/:id` · `DELETE /studios/:id` (ownership enforced server-side)
 - `POST /bookings` (status `Pending`) · `GET /bookings/mine` · `PATCH /bookings/:id/cancel`
-- BetterAuth mounted at `/api/auth` with the MongoDB adapter, JWT sessions and the Google provider.
+- BetterAuth mounted behind the `/api/backend/auth` frontend proxy, with the MongoDB adapter, JWT sessions and the Google provider.
 
 Requests send cookies (`credentials: "include"`) — enable CORS with credentials on the backend.
