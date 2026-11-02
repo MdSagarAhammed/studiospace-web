@@ -43,23 +43,33 @@ export function LoginForm() {
     setError("");
     setLoading(true);
     const redirect = params.get("redirect") || "/";
-    const { error: err } = await signIn.email({
-      email: form.email,
-      password: form.password,
-    });
-    if (err) {
-      setLoading(false);
+    try {
+      const { error: err } = await signIn.email({
+        email: form.email,
+        password: form.password,
+      });
+      if (err) {
+        const msg =
+          err.message === "Invalid email or password"
+            ? "Invalid email or password"
+            : err.message || "Login failed. Please try again.";
+        setError(msg);
+        toast.error(msg);
+        return;
+      }
+      toast.success("Welcome back!");
+      router.push(redirect);
+      router.refresh();
+    } catch (requestError) {
       const msg =
-        err.message === "Invalid email or password"
-          ? "Invalid email or password"
-          : err.message || "Login failed. Please try again.";
+        requestError instanceof Error
+          ? requestError.message
+          : "Unable to reach the authentication service. Please try again.";
       setError(msg);
       toast.error(msg);
-      return;
+    } finally {
+      setLoading(false);
     }
-    toast.success("Welcome back!");
-    router.push(redirect);
-    router.refresh();
   };
 
   return (
