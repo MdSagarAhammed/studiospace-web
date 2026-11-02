@@ -21,6 +21,10 @@ const OAUTH_ERROR_MESSAGES = {
     "Google sign-in is not configured on the server. Try email/password.",
   signup_disabled:
     "No account exists for this Google login. Create an account on the registration page first.",
+  unable_to_link_account:
+    "Google could not be linked to this account. Sign in with the account’s original method first.",
+  account_not_linked:
+    "This Google email matches an existing account. Sign in with that account’s original method first.",
   email_not_verified:
     "Verify your Google email address before signing in.",
 };
@@ -37,7 +41,7 @@ export function LoginForm() {
   const oauthError = params.get("error");
   const oauthMessage = oauthError
     ? OAUTH_ERROR_MESSAGES[oauthError] ||
-      `Google sign-in failed (code: ${oauthError}). If this Google account is new, create it from the registration page first.`
+      `Google sign-in failed (code: ${oauthError}).`
     : null;
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));

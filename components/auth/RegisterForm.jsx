@@ -56,9 +56,13 @@ export function RegisterForm() {
 
   const oauthError = params.get("error");
   const oauthMessage = oauthError
-    ? oauthError === "provider_not_found"
+    ? oauthError === "provider_not_found" || oauthError === "oauth_provider_not_found"
       ? "Google sign-in is not configured on the server."
-      : `Google registration failed (code: ${oauthError}). Please try again.`
+      : oauthError === "unable_to_link_account"
+        ? "Google could not be linked to this account. Sign in with the account’s original method first."
+        : oauthError === "account_not_linked"
+          ? "This Google email matches an existing account. Sign in with that account’s original method first."
+          : `Google registration failed (code: ${oauthError}).`
     : null;
 
   const { checks, messages } = validatePassword(form.password);

@@ -38,7 +38,9 @@ export function GoogleButton({ mode = "login" }) {
       if (error) {
         const code = error.code || error.message;
         const message =
-          code === "PROVIDER_NOT_ENABLED" || code === "provider_not_found"
+          code === "PROVIDER_NOT_ENABLED" ||
+          code === "provider_not_found" ||
+          code === "oauth_provider_not_found"
             ? "Google sign-in is not configured on the server."
             : code === "signup_disabled"
               ? "No account exists for this Google login. Use the registration page first."
