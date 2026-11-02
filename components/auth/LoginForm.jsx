@@ -19,6 +19,10 @@ const OAUTH_ERROR_MESSAGES = {
   state_not_found: "Your Google sign-in session expired. Please try again.",
   provider_not_found:
     "Google sign-in is not configured on the server. Try email/password.",
+  signup_disabled:
+    "No account exists for this Google login. Create an account on the registration page first.",
+  email_not_verified:
+    "Verify your Google email address before signing in.",
 };
 
 export function LoginForm() {

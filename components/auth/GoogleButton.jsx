@@ -25,6 +25,9 @@ export function GoogleButton({ mode = "login" }) {
     const { data, error } = await signIn.social({
       provider: "google",
       callbackURL,
+      // Better Auth only creates a new Google account when registration was
+      // explicitly started from the register page.
+      requestSignUp: mode === "register",
       // Take over navigation ourselves — avoids a race with the router
       disableRedirect: false,
     });
