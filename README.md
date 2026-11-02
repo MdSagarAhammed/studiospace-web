@@ -20,9 +20,20 @@ Open http://localhost:3000
 
 | Variable | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_API_BASE_URL` | Express backend REST API base (defaults to `http://localhost:5010/api`) |
-| `NEXT_PUBLIC_BETTER_AUTH_URL` | BetterAuth mount on the backend (`…/api/auth`) |
+| `BACKEND_ORIGIN` | Backend origin for the server-side Next.js proxy (defaults to `http://localhost:5010`) |
 | `NEXT_PUBLIC_IMGBB_API_KEY` | imgbb key used by the studio image uploader |
+
+Browser API and auth requests use the same-origin `/api/backend` route, which
+the Next.js server proxies to `BACKEND_ORIGIN`. This keeps session cookies
+first-party when the frontend and backend use different hosting domains.
+
+For deployment, set `BACKEND_ORIGIN` on the frontend host to the backend
+origin (for this deployment: `https://studiospace-server-gr2y.vercel.app`).
+On the backend, set `CLIENT_URL` to the exact frontend origin and set
+`BETTER_AUTH_URL` to `https://studiospace-web.onrender.com/api/backend/auth`.
+Update the Google OAuth redirect URI to
+`https://studiospace-web.onrender.com/api/backend/auth/callback/google`.
+Redeploy both apps after changing their environment variables.
 
 ## Routes
 
