@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "@/lib/auth-client";
+import { authClient, signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Loader2Icon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -42,24 +42,36 @@ export function LoginForm() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const redirect = params.get("redirect") || "/";
-    const { error: err } = await signIn.email({
-      email: form.email,
-      password: form.password,
-    });
-    if (err) {
-      setLoading(false);
-      const msg =
-        err.message === "Invalid email or password"
-          ? "Invalid email or password"
-          : err.message || "Login failed. Please try again.";
+    const requestedRedirect = params.get("redirect") || "/";
+    const redirect =
+      requestedRedirect.startsWith("/") && !requestedRedirect.startsWith("//")
+        ? requestedRedirect
+        : "/";
+
+    try {
+      const { error: signInError } = await signIn.email({
+        email: form.email,
+        password: form.password,
+      });
+      if (signInError) throw signInError;
+
+      // Confirm the cookie reaches the auth endpoint, then hydrate the shared
+      // Better Auth session store before a client-side route transition.
+      const { data: session, error: sessionError } = await authClient.getSession();
+      if (sessionError) throw sessionError;
+      if (!session?.user) {
+        throw new Error("Login succeeded, but the session could not be loaded. Please try again.");
+      }
+
+      authClient.hydrateSession(session);
+      toast.success("Welcome back!");
+      router.replace(redirect);
+    } catch (err) {
+      const msg = err.message || "Login failed. Please try again.";
       setError(msg);
       toast.error(msg);
-      return;
+      setLoading(false);
     }
-    toast.success("Welcome back!");
-    router.push(redirect);
-    router.refresh();
   };
 
   return (

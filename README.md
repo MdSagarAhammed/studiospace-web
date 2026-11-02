@@ -28,12 +28,13 @@ the Next.js server proxies to `BACKEND_ORIGIN`. This keeps session cookies
 first-party when the frontend and backend use different hosting domains.
 
 For deployment, set `BACKEND_ORIGIN` on the frontend host to the backend
-origin (for this deployment: `https://studiospace-server-gr2y.vercel.app`).
-On the backend, set `CLIENT_URL` to the exact frontend origin and set
-`BETTER_AUTH_URL` to `https://studiospace-web.onrender.com/api/backend/auth`.
-Update the Google OAuth redirect URI to
-`https://studiospace-web.onrender.com/api/backend/auth/callback/google`.
-Redeploy both apps after changing their environment variables.
+origin only, such as `https://api.example.com` (no `/api` suffix). On the
+backend, set `CLIENT_URL` to the exact frontend origin and set
+`BETTER_AUTH_URL` to the frontend auth proxy URL:
+`https://example.com/api/backend/auth`. For Google sign-in, register
+`https://example.com/api/backend/auth/callback/google` as the OAuth redirect
+URI. Set environment values before building/redeploying the frontend because
+Next.js reads its rewrite destination when loading its configuration.
 
 ## Routes
 

@@ -51,7 +51,6 @@ export function Navbar() {
   const router = useRouter();
   const { data: session, isPending } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
   // Track the URL fragment (#how-it-works / #about). Next.js doesn't expose
   // the hash through any hook, so we read it here: on mount, after soft
@@ -71,10 +70,13 @@ export function Navbar() {
   };
 
   const handleLogout = async () => {
-    await signOut();
-    toast.success("Logged out successfully");
-    router.push("/");
-    router.refresh();
+    try {
+      await signOut();
+      toast.success("Logged out successfully");
+      router.replace("/");
+    } catch (error) {
+      toast.error(error.message || "Logout failed. Please try again.");
+    }
   };
 
   const user = session?.user;
@@ -113,10 +115,7 @@ export function Navbar() {
           {isPending ? (
             <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
           ) : user ? (
-            <DropdownMenu
-              open={profileMenuOpen}
-              onOpenChange={setProfileMenuOpen}
-            >
+            <DropdownMenu>
               <DropdownMenuTrigger
                 render={
                   <button className="flex items-center gap-2 rounded-full border border-transparent py-1 pr-2 pl-1 transition-colors hover:border-border" />
@@ -133,38 +132,36 @@ export function Navbar() {
                 </span>
                 <ChevronDownIcon className="size-3.5 text-muted-foreground" />
               </DropdownMenuTrigger>
-              {profileMenuOpen ? (
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>
-                      <p className="truncate">{user.name}</p>
-                      <p className="truncate text-xs font-normal text-muted-foreground">
-                        {user.email}
-                      </p>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem render={<Link href="/dashboard" />}>
-                      <LayoutDashboardIcon /> Dashboard
-                    </DropdownMenuItem>
-                    <DropdownMenuItem render={<Link href="/add-studio" />}>
-                      <PlusCircleIcon /> Add New Studio
-                    </DropdownMenuItem>
-                    <DropdownMenuItem render={<Link href="/my-listings" />}>
-                      <BuildingIcon /> My Studio Listings
-                    </DropdownMenuItem>
-                    <DropdownMenuItem render={<Link href="/my-bookings" />}>
-                      <CalendarCheckIcon /> My Bookings
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleLogout}
-                      className="text-destructive focus:text-destructive"
-                    >
-                      <LogOutIcon /> Logout
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              ) : null}
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>
+                    <p className="truncate">{user.name}</p>
+                    <p className="truncate text-xs font-normal text-muted-foreground">
+                      {user.email}
+                    </p>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem render={<Link href="/dashboard" />}>
+                    <LayoutDashboardIcon /> Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/add-studio" />}>
+                    <PlusCircleIcon /> Add New Studio
+                  </DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/my-listings" />}>
+                    <BuildingIcon /> My Studio Listings
+                  </DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/my-bookings" />}>
+                    <CalendarCheckIcon /> My Bookings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <LogOutIcon /> Logout
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="hidden items-center gap-2 sm:flex">
