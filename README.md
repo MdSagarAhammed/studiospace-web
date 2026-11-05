@@ -1,62 +1,77 @@
-# StudioSpace — Frontend
+# StudioSpace — Creative Workspace Marketplace
 
-The frontend for **StudioSpace**, a peer-to-peer marketplace where creators
-book photography studios, cinema sound stages, podcast lounges, music suites
-and art workshops by the hour.
+**Discover. Book. Create.**
 
-**Stack:** Next.js (App Router) · JavaScript · Tailwind CSS v4 · shadcn/ui (Base UI) · BetterAuth client · Swiper · Sonner
+StudioSpace is a peer-to-peer marketplace where creators, photographers, filmmakers, podcasters, and musicians can discover and book professional creative workspaces. It also allows studio owners to list and manage their spaces through a seamless booking platform.
 
-## Getting started
+🌐 **Live Website:** https://studiospace-web.onrender.com
+
+## ✨ Key Features
+
+- **Explore Studios:** Discover creative spaces with category-based filtering, search, and detailed workspace information.
+- **Secure Authentication:** Register and log in using email/password or Google authentication.
+- **Studio Management:** Add, update, and delete studio listings with image uploads and detailed information.
+- **Smart Booking System:** Reserve studio spaces and manage bookings with real-time booking status.
+- **Personal Dashboard:** Manage your studio listings, reservations, and account information.
+- **Responsive Design:** Fully optimized interface for mobile, tablet, and desktop devices.
+- **Theme Customization:** Switch between light and dark themes for a personalized experience.
+
+## 🛠️ Technology Stack
+
+- **Framework:** Next.js (App Router)
+- **Language:** JavaScript 
+- **Styling:** Tailwind CSS, Shadcn UI 
+- **Authentication:** Better Auth, Google OAuth
+- **Database Integration:** MongoDB
+- **Notifications:** Sonner 
+- **Deployment:** Render
+
+## 🚀 Local Setup
+
+**1. Clone the repository**
+
+```bash
+git clone https://github.com/MdSagarAhammed/studiospace-web.git
+cd studiospace-web
+```
+
+**2. Install dependencies**
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in your values
+```
+
+**3. Configure environment variables**
+
+Create a `.env.local` file in the project root:
+
+```env
+# Server-side Express backend origin for the Next.js API proxy
+BACKEND_ORIGIN=http://localhost:5000
+
+# imgbb key for the image upload system
+NEXT_PUBLIC_IMGBB_API_KEY=get an api key
+
+
+**4. Start the development server**
+
+```bash
 npm run dev
 ```
 
-Open http://localhost:3000
+**5. Open the application**
 
-## Environment variables
+Visit: http://localhost:3000
 
-| Variable | Purpose |
-| --- | --- |
-| `BACKEND_ORIGIN` | Backend origin for the server-side Next.js proxy (defaults to `http://localhost:5010`) |
-| `NEXT_PUBLIC_IMGBB_API_KEY` | imgbb key used by the studio image uploader |
+## 🔐 Examiner Test Credentials
 
-Browser API and auth requests use the same-origin `/api/backend` route, which
-the Next.js server proxies to `BACKEND_ORIGIN`. This keeps session cookies
-first-party when the frontend and backend use different hosting domains.
+**Test Account**
 
-For deployment, set `BACKEND_ORIGIN` on the frontend host to the backend
-origin only, such as `https://api.example.com` (no `/api` suffix). On the
-backend, set `CLIENT_URL` to the exact frontend origin and set
-`BETTER_AUTH_URL` to the frontend auth proxy URL:
-`https://example.com/api/backend/auth`. For Google sign-in, register
-`https://example.com/api/backend/auth/callback/google` as the OAuth redirect
-URI. Set environment values before building/redeploying the frontend because
-Next.js reads its rewrite destination when loading its configuration.
+- Email: `dev.test@gmail.com`
+- Password: `Dev000`
 
-## Routes
 
-| Route | Access | Description |
-| --- | --- | --- |
-| `/` | Public | Hero slider, featured studios (limit 6), categories, how-it-works, host guarantee |
-| `/studios` | Public | Explore grid with search, category filter & sort (`?category=` pre-select supported) |
-| `/studios/[id]` | Public | Gallery, specs, amenities, host card, reviews, booking modal |
-| `/login` · `/register` | Public | Email/password auth (password rules validated client-side) + Google social login |
-| `/add-studio` | Private | List a new studio (imgbb upload, read-only host info) |
-| `/studios/edit/[id]` | Private | Pre-filled update form |
-| `/my-listings` | Private | Owner table with update/delete + delete confirmation modal |
-| `/my-bookings` | Private | Booking list with status badges & pending-slot cancellation |
-| `/dashboard` | Private | Quick links hub |
 
-## Backend contract
+## 📌 Project Purpose
 
-This frontend expects the Express API (separate repository) to serve:
-
-- `GET /studios?search&category&sort` · `GET /studios/featured` · `GET /studios/:id` · `GET /studios/mine`
-- `POST /studios` · `PUT /studios/:id` · `DELETE /studios/:id` (ownership enforced server-side)
-- `POST /bookings` (status `Pending`) · `GET /bookings/mine` · `PATCH /bookings/:id/cancel`
-- BetterAuth mounted behind the `/api/backend/auth` frontend proxy, with the MongoDB adapter, JWT sessions and the Google provider.
-
-Requests send cookies (`credentials: "include"`) — enable CORS with credentials on the backend.
+StudioSpace simplifies the process of finding, sharing, and booking creative production spaces while providing studio owners with an efficient platform to manage their listings and reservations.
